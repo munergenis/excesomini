@@ -21,7 +21,7 @@ export const getInfo = (data: FormInputs): Info => {
 
   // 3) Es Tarifa Plana?
   const isTarifaPlana =
-    daysBooking > CONFIG.FLAT_MIN_DAYS && daysBooking < CONFIG.FLAT_MAX_DAYS;
+    daysBooking >= CONFIG.FLAT_MIN_DAYS && daysBooking < CONFIG.FLAT_MAX_DAYS;
 
   // 4) Cáclulo base de excesos (minutos)
   const inSurchargeMs = Math.max(t0Book - t0Real - 2 * MS_IN_HOUR, 0);
