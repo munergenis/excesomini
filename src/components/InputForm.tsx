@@ -77,7 +77,7 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
 
       <div className="flex flex-col gap-2 shadow-lg bg-gradient-to-br from-white to-green-100 p-4 rounded-xl">
         <h2 className="text-xl">Reserva</h2>
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <Controller
             control={control}
             name="inicioReserva"
@@ -147,7 +147,7 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
 
       <div className="flex flex-col gap-2 shadow-lg bg-gradient-to-br from-white to-green-100 p-4 rounded-xl">
         <h2 className="text-xl">Estancia Real</h2>
-        <div className="flex gap-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <Controller
             control={control}
             name="entradaReal"
