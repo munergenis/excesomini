@@ -10,13 +10,14 @@ export const round05 = (number: number): number => {
   return wholeNum / 100;
 };
 
+const minutesPerDay = 1440;
+
 export const calculateSurchargePrice = (minutes: number): number => {
   const pricePerMinute = 0.04396;
-  const minutesPerDay = 1440;
   const maxPricePerDay = 10;
 
-  const wholeDays = Math.floor(minutes / minutesPerDay);
-  const minutesLastDay = minutes % minutesPerDay;
+  const { days: wholeDays, minutes: minutesLastDay } =
+    getTotalDaysAndMinutes(minutes);
 
   let total = wholeDays * maxPricePerDay;
   const parcial = minutesLastDay * pricePerMinute;
@@ -24,4 +25,45 @@ export const calculateSurchargePrice = (minutes: number): number => {
 
   total += Math.min(roundedParcial, maxPricePerDay);
   return parseFloat(total.toFixed(2));
+};
+
+export const getTotalDaysAndMinutes = (
+  totalMinutes: number
+): { days: number; minutes: number } => {
+  const days = Math.floor(totalMinutes / minutesPerDay);
+  const minutes = totalMinutes % minutesPerDay;
+
+  return { days, minutes };
+};
+
+export const getStringResult = (
+  checkInMinutesSurcharge: number,
+  checkOutMinutesSurcharge: number
+): { checkInString: string; checkOutString: string } => {
+  const { days: checkInDays, minutes: checkInMinutes } = getTotalDaysAndMinutes(
+    checkInMinutesSurcharge
+  );
+  const { days: checkOutDays, minutes: checkOutMinutes } =
+    getTotalDaysAndMinutes(checkOutMinutesSurcharge);
+
+  const daysString = (days: number) => `${days} día${days !== 1 ? 's' : ''}`;
+  const hours = (hours: number) => `${hours} hora${hours !== 1 ? 's' : ''}`;
+
+  const checkInString =
+    checkInDays === 0 && checkInMinutes === 0
+      ? '-'
+      : `${daysString(checkInDays)} y ${hours(
+          Math.round(checkInMinutes / 60)
+        )}`;
+  const checkOutString =
+    checkOutDays === 0 && checkOutMinutes === 0
+      ? '-'
+      : `${daysString(checkOutDays)} y ${hours(
+          Math.round(checkOutMinutes / 60)
+        )}`;
+
+  return {
+    checkInString,
+    checkOutString,
+  };
 };

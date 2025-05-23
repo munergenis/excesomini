@@ -5,13 +5,11 @@ import { Button, Checkbox, DatePicker, Input } from '@heroui/react';
 import { now, getLocalTimeZone } from '@internationalized/date';
 import { useEffect } from 'react';
 import { Form } from './Form';
+import type { Info } from '@/interfaces/Info';
+import { getInfo } from '@/lib/service';
 
 interface InputFormProps {
-  onSubmit: (
-    minutes: number,
-    prePrice: number,
-    isBookingTarifaPlana: boolean
-  ) => void;
+  onSubmit: (info: Info) => void;
 }
 
 export const InputForm = ({ onSubmit }: InputFormProps) => {
@@ -43,49 +41,20 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
       setError('inicioReserva', { message: 'Inicio debe ser anterior a Fin' });
       return;
     }
+    if (!data.prepago && data.precioOriginal === 0) {
+      setError('precioOriginal', { message: 'Falta el precio' });
+      return;
+    }
     if (data.entradaReal.toDate() >= data.salidaReal.toDate()) {
       setError('entradaReal', {
         message: 'Entrada debe ser anterior a Salida',
       });
       return;
     }
-    const initBookingTime = data.inicioReserva.toDate().getTime();
-    const endBookingTime = data.finReserva.toDate().getTime();
-    const initRealTime = data.entradaReal.toDate().getTime();
-    const endRealTime = data.salidaReal.toDate().getTime();
-    const totalBookingTime = endBookingTime - initBookingTime;
-    const totalRealTime = endRealTime - initRealTime;
-    const isBookingTarifaPlana =
-      totalBookingTime / (1000 * 60 * 60 * 24) > 7 &&
-      totalBookingTime / (1000 * 60 * 60 * 24) < 21;
 
-    const checkinTimeSurcharge = Math.max(
-      initBookingTime - initRealTime - 1000 * 60 * 60 * 2,
-      0
-    );
-    const checkoutTimeSurcharge = Math.max(
-      endRealTime - endBookingTime - 1000 * 60 * 60 * 2,
-      0
-    );
+    const info = getInfo(data);
 
-    const totalSurchargeTime = checkinTimeSurcharge + checkoutTimeSurcharge;
-    let totalSurchargeTimeMinutes = Math.floor(
-      totalSurchargeTime / (1000 * 60)
-    );
-
-    if (
-      data.tarifasPlanas &&
-      isBookingTarifaPlana &&
-      totalRealTime / (1000 * 60 * 60 * 24) < 21
-    ) {
-      totalSurchargeTimeMinutes = 0;
-    }
-
-    onSubmit(
-      totalSurchargeTimeMinutes,
-      data.precioOriginal,
-      isBookingTarifaPlana
-    );
+    onSubmit(info);
 
     console.log(data);
   };
@@ -160,7 +129,7 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
         <Controller
           control={control}
           name="precioOriginal"
-          render={({ field }) => (
+          render={({ field, fieldState: { error } }) => (
             <Input
               variant="faded"
               label="Precio Original"
@@ -169,6 +138,8 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
               isDisabled={isPrepago}
               value={isNaN(field.value) ? '0' : field.value.toString()}
               onChange={(e) => field.onChange(+e.target.value)}
+              isInvalid={!!error?.message}
+              errorMessage={error?.message}
             />
           )}
         />
