@@ -6,7 +6,7 @@ interface FormProps {
   children: ReactNode;
 }
 
-export const Form = ({ onSubmit, children }: FormProps) => {
+export const FormWrapper = ({ onSubmit, children }: FormProps) => {
   return (
     <form
       className="flex flex-col gap-y-4 p-4 container max-w-lg mx-auto"

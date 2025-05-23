@@ -4,7 +4,7 @@ import { inputsSchema, type FormInputs } from '@/interfaces/Inputs';
 import { Button, Checkbox, DatePicker, Input } from '@heroui/react';
 import { now, getLocalTimeZone } from '@internationalized/date';
 import { useEffect } from 'react';
-import { Form } from './Form';
+import { FormWrapper } from './FormWrapper';
 import type { Info } from '@/interfaces/Info';
 import { getInfo } from '@/lib/service';
 
@@ -60,7 +60,7 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit(calculate)}>
+    <FormWrapper onSubmit={handleSubmit(calculate)}>
       <Controller
         control={control}
         name="tarifasPlanas"
@@ -191,6 +191,6 @@ export const InputForm = ({ onSubmit }: InputFormProps) => {
       >
         Calcular
       </Button>
-    </Form>
+    </FormWrapper>
   );
 };
