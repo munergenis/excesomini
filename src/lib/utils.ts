@@ -1,3 +1,5 @@
+import { CONFIG } from './config';
+
 export const formatDateTimeLocal = (date: Date) => {
   const offset = date.getTimezoneOffset();
   const localDate = new Date(date.getTime() - offset * 60 * 1000);
@@ -10,11 +12,11 @@ export const round05 = (number: number): number => {
   return wholeNum / 100;
 };
 
-const minutesPerDay = 1440;
+const minutesInDay = 1440;
 
 export const calculateSurchargePrice = (minutes: number): number => {
-  const pricePerMinute = 0.04396;
-  const maxPricePerDay = 10;
+  const pricePerMinute = CONFIG.PRICE_PER_MINUTE;
+  const maxPricePerDay = CONFIG.MAX_PRICE_PER_DAY;
 
   const { days: wholeDays, minutes: minutesLastDay } =
     getTotalDaysAndMinutes(minutes);
@@ -30,8 +32,8 @@ export const calculateSurchargePrice = (minutes: number): number => {
 export const getTotalDaysAndMinutes = (
   totalMinutes: number
 ): { days: number; minutes: number } => {
-  const days = Math.floor(totalMinutes / minutesPerDay);
-  const minutes = totalMinutes % minutesPerDay;
+  const days = Math.floor(totalMinutes / minutesInDay);
+  const minutes = totalMinutes % minutesInDay;
 
   return { days, minutes };
 };

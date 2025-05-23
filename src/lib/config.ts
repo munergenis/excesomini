@@ -1,0 +1,6 @@
+export const CONFIG = {
+  PRICE_PER_MINUTE: 0.04396,
+  MAX_PRICE_PER_DAY: 10,
+  FLAT_MIN_DAYS: 7,
+  FLAT_MAX_DAYS: 21,
+} as const;
